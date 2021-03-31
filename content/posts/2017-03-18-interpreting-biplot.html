@@ -1,0 +1,36 @@
+---
+title  : Interpreting Biplot
+slug   : interpreting-biplot
+author : therimalaya
+date   : 2017-03-18
+categories:
+  - statistics
+tags:
+  - biplot
+  - interpretation of biplot
+  - pca
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>Obviously, the name suggests itself that there are two aspect of data plotted in latent scale. Biplot in case of principal component analysis (PCA) plot both variable and observation in latent scale (scores and loadings). Throughout this article, I will use <a href="https://www.rdocumentation.org/packages/datasets/versions/3.3.2/topics/USArrests"><code>USArrests</code></a> data from <code>datasets</code> package. Lets fit a PCA model using <code>princomp</code> function. However, this can also be done using <code>prcomp</code>. The later one uses singular value decomposition while the former one uses eigenvalue decomposition. Here I have used correlation rather than covariance to compute principal components because there are large values in case of <code>Murder</code> and <code>UrbanPop</code></p>
+<pre class="r"><code>pc.a &lt;- princomp(USArrests, cor = TRUE)
+plot(pc.a, type = &quot;lines&quot;, pch = 22, bg = &quot;grey&quot;,
+     main = &quot;Variance explained by each componets in PCA&quot;)
+text(1:4, pc.a$sdev^2, pos = 4,
+     labels = round(cumsum(pls::explvar(pc.a)), 1))
+box()</code></pre>
+<div class="figure" style="text-align: center"><span id="fig:get-records"></span>
+<img src="/posts/2017-03-18-interpreting-biplot_files/figure-html/get-records-1.png" alt="Variance of each components and the proportaion of the total variance explained for each additional components is displayed as label" width="100%" />
+<p class="caption">
+Figure 1: Variance of each components and the proportaion of the total variance explained for each additional components is displayed as label
+</p>
+</div>
+<p>Here, with three components, we have captured 95.7 percent of total variation present in <code>USArrests</code> dataset. Lets get the biplot and try to understand it.</p>
+<pre class="r"><code>library(ggfortify)
+autoplot(
+  pc.a, label = T, shape = FALSE,
+  loadings = TRUE, loadings.label = TRUE,
+  label.size = 3.5, label.repel = TRUE)</code></pre>
+<p><img src="/posts/2017-03-18-interpreting-biplot_files/figure-html/biplot-1.png" width="100%" style="display: block; margin: auto;" /></p>

@@ -1,0 +1,193 @@
+---
+title  : How ANOVA analyze the variance
+slug   : how-anova-analyze-the-variance
+author : therimalaya
+date   : 2021-03-29
+tags:
+  - Statistics
+  - ANOVA
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  comment = NA,
+  out.width = '100%',
+  dev = "svg"
+)
+library(tibble)
+library(dplyr)
+library(ggplot2)
+set.seed(124)
+```
+
+
+Often we Analysis of Variance (ANOVA) to analyze the variances to find if different cases results in similar outcome and if the difference is significant. Following are some simple examples,
+
+- The effect of different diets on growth of fishes
+- Comparing the height of three different species of a plant
+- Type of flour used for baking a bread
+
+These are some common examples where in some cases data are collected by setting up an experiment and in other cases they are collected through sampling. This article tries to explain how the ANOVA analyze the variance and in what situation are they significant throught both simulated and real data.
+
+Consider the following model with $i=3$ groups and $j=n$ observations,
+
+$$y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \; i = 1, 2, 3 \texttt{ and } j = 1, 2, \ldots n$$
+
+here, $\tau_i$ is the effect corresponding to group $i$ and $\varepsilon_{ij} \sim \mathrm{N}(0, \sigma^2)$, the usual assumption of linear model. Simulation example below describe it in details.
+
+## Simulation and Real Data Example {.accordions} 
+
+### Simulation {.accordion}
+```{r}
+nsim <- 100
+```
+
+Consider following three cases the variance of each group is quiet high. These three groups have different average values. Let us simulate only `r nsim` observations,
+
+```{r, echo = TRUE}
+cases <- tibble(
+  group = paste("Group", 1:3),
+  mean = c(0.5, 1, 0.2),
+  sd = rep(1, 3)
+  # sd = c(0.2, 0.8, 0.3)
+) %>% 
+  group_by(group) %>% 
+  mutate(observation = purrr::map2(mean, sd, function(mean, sd) {
+    rnorm(nsim, mean, sd) + rnorm(nsim, 0, 1)
+  }))
+```
+
+```{r}
+cases
+```
+
+
+#### Analysis {.tabset}
+
+##### Plot {.tab}
+
+```{r}
+ggplot(tidyr::unnest(cases, cols = "observation"), 
+       aes(observation, group)) +
+  geom_boxplot(notch = TRUE, color = "gray70") +
+  geom_point(position = position_jitter(width = 0.1, height = 0.1),
+             alpha = 0.2, shape = 21) +
+  geom_rug(sides = "b") +
+  stat_summary(fun = mean, aes(color = "Estimated"), geom = "point") +
+  geom_point(aes(color = "True", x = mean, y = group), 
+             data = cases, inherit.aes = FALSE, size = 2) +
+  labs(x = "Value", y = NULL, color = "Mean") +
+  ggthemes::theme_few() +
+  theme(legend.position = c(1, 0), legend.justification = c(1.2, -0.2),
+        axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+  facet_grid(rows = vars(group), scales = 'free_y')
+```
+
+##### ANOVA {.tab}
+
+```{r}
+mdl <- lm(observation ~ group, data = tidyr::unnest(cases, cols = "observation"))
+summary(mdl)
+```
+
+##### Effects {.tab}
+
+```{r}
+eff <- effects::allEffects(mdl)
+ggplot(tidyr::unnest(cases, cols = "observation"),
+       aes(group, observation)) +
+  geom_point(shape = 21, alpha = 0.3, position = position_jitter(0.1, 0.1)) +
+  geom_line(data = as.data.frame(eff)[['group']], 
+            aes(y = fit), color = "red", group = 1) +
+  geom_pointrange(data = as.data.frame(eff)[['group']], 
+             aes(y = fit, ymin = lower, ymax = upper), 
+             color = "red", shape = 21, fill = "whitesmoke") +
+  ggthemes::theme_few()
+```
+
+##### Post-hoc {.tab}
+```{r}
+tky <- TukeyHSD(aov(mdl))
+tky <- tibble::rownames_to_column(as.data.frame(tky$group)) %>% 
+  mutate(signif = ifelse(`p adj` <= 0.05, "significant", "not-significant"))
+ggplot(tky, aes(diff, rowname, color = signif)) +
+  geom_pointrange(aes(xmin = lwr, xmax = upr)) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray40") +
+  labs(color = NULL, x = bquote(tau[i] - tau[j]), parse = TRUE,
+       y = NULL, title = "Tukey Test for pairwise comparison") +
+  ggthemes::theme_few() +
+  theme(legend.position = c(1, 1), legend.justification = c(1.1, 1.1))
+```
+
+
+
+### Real Data {.accordion}
+
+Lets use the famous `iris` dataset and try to analyze the difference in the `Species` based on the `Sepal.Length`,
+
+```{r, echo = TRUE}
+iris <- as_tibble(iris)
+```
+
+```{r}
+iris
+```
+
+
+#### Analysis {.tabset}
+
+##### Plot {.tab}
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Species)) +
+  geom_boxplot(notch = TRUE, color = "gray70") +
+  geom_point(position = position_jitter(width = 0.1, height = 0.1),
+             alpha = 0.2, shape = 21) +
+  stat_summary(fun = mean, color = "#CC0000", shape = 4, geom = "point") +
+  geom_rug(sides = "b") +
+  labs(x = "Value", y = NULL, color = "Mean") +
+  ggthemes::theme_few() +
+  theme(legend.position = c(1, 0), legend.justification = c(1.2, -0.2),
+        axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+  facet_grid(rows = vars(Species), scales = 'free_y')
+```
+
+##### ANOVA {.tab}
+
+```{r}
+mdl <- lm(Sepal.Length ~ Species, data = iris)
+summary(mdl)
+```
+
+##### Effects {.tab}
+
+```{r}
+eff <- effects::allEffects(mdl)
+ggplot(iris,
+       aes(Species, Sepal.Length)) +
+  geom_point(shape = 21, alpha = 0.3, position = position_jitter(0.1, 0.1)) +
+  geom_line(data = as.data.frame(eff)[["Species"]], 
+            aes(y = fit), color = "red", group = 1) +
+  geom_pointrange(data = as.data.frame(eff)[['Species']], 
+             aes(y = fit, ymin = lower, ymax = upper), 
+             color = "red", shape = 21, fill = "whitesmoke") +
+  ggthemes::theme_few()
+```
+
+##### Post-hoc {.tab}
+```{r}
+tky <- TukeyHSD(aov(mdl))
+tky <- tibble::rownames_to_column(as.data.frame(tky$Species)) %>% 
+  mutate(signif = ifelse(`p adj` <= 0.05, "significant", "not-significant"))
+ggplot(tky, aes(diff, rowname, color = signif)) +
+  geom_pointrange(aes(xmin = lwr, xmax = upr)) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray40") +
+  labs(color = NULL, x = bquote(tau[i] - tau[j]), parse = TRUE,
+       y = NULL, title = "Tukey Test for pairwise comparison") +
+  ggthemes::theme_few() +
+  theme(legend.position = c(1, 1), legend.justification = c(1.1, 1.1))
+```
+
+
+

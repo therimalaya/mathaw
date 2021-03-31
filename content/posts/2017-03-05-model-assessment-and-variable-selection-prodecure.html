@@ -1,0 +1,344 @@
+---
+title: Model assessment and variable selection
+slug: model-assessment-variable-selection
+author: therimalaya
+date: 2017-03-05
+toc: true
+tags:
+  - Statistics
+  - Modeling
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+
+</div>
+
+<p>Whenever we add a variable in our model, we are not only adding information but also noise that clutter the information and makes the analysis difficult. Simpler model is always better since they contain less noise and they are easy to interpret. In real life, things are not that simple. But relax, there are statistical methods that make model assessment and perform variable selection and gives optimal set of variables for us.</p>
+<p>Here, I will discuss how to compare model to know which one is better than other. This model assessment help us to select a model with few variable that can perform as good as a model with large number of variables. Here comes the idea of variable selection. I will try to explain these concepts with an example. For the example I will use <code>mtcars</code> data set which is available in R by default. Following are two well know procedure of selecting subset of variables,</p>
+<div id="best-subset-method" class="section level1">
+<h1>Best subset method</h1>
+<p>Best subset procedure selects best regression model by running all possible subset of variables. When number of variable is large, the possible combinations of candidate subset become huge. For example, for 2 variable case (<span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span>), there are 4 possible subsets – 1 with no predictors, 2 with single predictors and 1 with both predictors. Similarly, if there are 4 variable case (<span class="math inline">\(X_1, X_2, X_3\)</span> and <span class="math inline">\(X_4\)</span>), there will be 16 possible subset. In general, fitting all possible subset of large number of predictors becomes computationally intensive.</p>
+<p>Once, all the possible model is fitted, they are compared based on some criteria. This model assessment may based on various criteria such as coefficient of determination (<span class="math inline">\(R^2\)</span>), adjusted <span class="math inline">\(R^2\)</span>, Mallow’s CP, AIC and BIC. In R, <a href="https://www.rdocumentation.org/packages/leaps/versions/2.1-1">leaps</a> package can be used for performing this operation. Lets dig into our <code>mtcars</code> example.</p>
+<details>
+<summary>
+<p><strong>Fitting a complete model:</strong></p>
+<pre class="r"><code>full.model &lt;- lm(mpg ~ ., data = mtcars)
+smry &lt;- summary(full.model)</code></pre>
+</summary>
+<pre class="r"><code>smry</code></pre>
+<pre><code>
+Call:
+lm(formula = mpg ~ ., data = mtcars)
+
+Residuals:
+         Min           1Q       Median           3Q          Max 
+-3.450644085 -1.604401795 -0.119605107  1.219267814  4.627094192 
+
+Coefficients:
+                 Estimate    Std. Error  t value Pr(&gt;|t|)
+(Intercept) 12.3033741560 18.7178844287  0.65731 0.518124
+cyl         -0.1114404779  1.0450233625 -0.10664 0.916087
+disp         0.0133352399  0.0178575003  0.74676 0.463489
+hp          -0.0214821190  0.0217685793 -0.98684 0.334955
+drat         0.7871109722  1.6353730686  0.48130 0.635278
+wt          -3.7153039283  1.8944142995 -1.96119 0.063252
+qsec         0.8210407497  0.7308447960  1.12341 0.273941
+vs           0.3177628142  2.1045086057  0.15099 0.881423
+am           2.5202268872  2.0566505535  1.22540 0.233990
+gear         0.6554130171  1.4932599611  0.43891 0.665206
+carb        -0.1994192549  0.8287524977 -0.24063 0.812179
+
+Residual standard error: 2.65019703 on 21 degrees of freedom
+Multiple R-squared:  0.869015764,   Adjusted R-squared:  0.806642319 
+F-statistic: 13.9324637 on 10 and 21 DF,  p-value: 3.79315211e-07</code></pre>
+</details>
+<p>Here, we can see that the model has explained almost 86.9 percent of variation present in <code>mpg</code>, but non of the predictors are significant. This is a hint of having unnecessary variables that has increased model error. Using <code>regsubsets</code> function from <code>leaps</code> package, we can select a subset of predictors based on some criteria.</p>
+<pre class="r"><code>library(leaps)
+best.subset &lt;-
+  regsubsets(
+    x      = mtcars[, -1],     # predictor variables
+    y      = mtcars[, 1],      # response variable (mpg)
+    nbest  = 1,                # top 1 best model
+    nvmax  = ncol(mtcars) - 1, # max. number of variable (all)
+    method = &quot;exhaustive&quot;      # search all possible subset
+  )
+bs.smry &lt;- summary(best.subset)</code></pre>
+<p>We can combine following summary output with a plot created from additional estimates to get some insight. These estimates are also found in the summary object. The output show which variables are included with a star(<code>*</code>).</p>
+<pre class="r"><code>pander::pander(bs.smry$outmat)
+bs.est &lt;- data.frame(
+  nvar   = 1:(best.subset$nvmax - 1),
+  adj.r2 = round(bs.smry$adjr2, 3),
+  cp     = round(bs.smry$cp, 3),
+  bic    = round(bs.smry$bic, 3)
+)
+bs.est &lt;- tidyr::gather(bs.est, &quot;estimates&quot;, &quot;value&quot;, -nvar)</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="19%" />
+<col width="7%" />
+<col width="9%" />
+<col width="6%" />
+<col width="9%" />
+<col width="6%" />
+<col width="9%" />
+<col width="6%" />
+<col width="6%" />
+<col width="9%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">cyl</th>
+<th align="center">disp</th>
+<th align="center">hp</th>
+<th align="center">drat</th>
+<th align="center">wt</th>
+<th align="center">qsec</th>
+<th align="center">vs</th>
+<th align="center">am</th>
+<th align="center">gear</th>
+<th align="center">carb</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>1 ( 1 )</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr class="even">
+<td align="center"><strong>2 ( 1 )</strong></td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>3 ( 1 )</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr class="even">
+<td align="center"><strong>4 ( 1 )</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>5 ( 1 )</strong></td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr class="even">
+<td align="center"><strong>6 ( 1 )</strong></td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>7 ( 1 )</strong></td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center"></td>
+</tr>
+<tr class="even">
+<td align="center"><strong>8 ( 1 )</strong></td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>9 ( 1 )</strong></td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>10 ( 1 )</strong></td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+</tr>
+</tbody>
+</table>
+<details>
+<summary>
+We can make a plot to visualise the properties of these individual models and select a model with specific number of predictor that can give minimum BIC, or minimum CP or maximum adjusted rsquared.
+</summary>
+<pre class="r"><code>library(ggplot2)
+library(dplyr)
+bs.est.select &lt;- bs.est %&gt;%
+  group_by(estimates) %&gt;%
+  filter(
+    (value == max(value) &amp; estimates == &quot;adj.r2&quot;) |
+    (value == min(value) &amp; estimates != &quot;adj.r2&quot;)
+  )
+assessment.plt &lt;- ggplot(bs.est, aes(nvar, value, color = estimates)) +
+  geom_point(shape = 21, fill = &quot;lightgray&quot;) +
+  geom_line() +
+  facet_wrap(~estimates, scale = &#39;free_y&#39;) +
+  theme(legend.position = &quot;top&quot;) +
+  labs(x = &quot;Number of variables in the model&quot;,
+       y = &quot;Value of Estimate&quot;) +
+  scale_x_continuous(breaks = seq(0, 10, 2)) +
+  geom_point(data = bs.est.select, fill = &quot;red&quot;,
+             shape = 21) +
+  geom_text(aes(label = paste0(&quot;nvar:&quot;, nvar, &#39;\n&#39;, &quot;value:&quot;, value)),
+            data = bs.est.select, 
+            size = 3, hjust = 0, vjust = c(1, -1, -1),
+            color = &quot;black&quot;, family = &quot;monospace&quot;)</code></pre>
+</details>
+<p><img src="/posts/2017-03-05-model-assessment-and-variable-selection-prodecure_files/figure-html/assessment.plot-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>From these plots, we see that with 5 variables we will obtain maximum adjusted coefficient of determination (<span class="math inline">\(R^2\)</span>). Similarly, both BIC and Mallow CP will be minimum for models with only 3 predictor variables. With the help of table above, we can identify these variables. From the table, row corresponding to 3 variables, we see that the three predictors are <code>wt</code>, <code>qsec</code> and <code>am</code>. To obtain maximum adjusted <span class="math inline">\(R^2\)</span>, <code>disp</code> and <code>hp</code> should be added to the previous 3 predictors.</p>
+<p>This way, we can reduce a model to few variables optimising different assessment criteria. Let look at the fit of these reduced models:</p>
+<pre class="r"><code>model.3 &lt;- lm(mpg ~ wt + qsec + am, data = mtcars)
+model.5 &lt;- update(model.3, . ~ . + disp + hp)</code></pre>
+<div id="summaries-of-the-models" class="section level2 tabset">
+<h2>Summaries of the models</h2>
+<div id="variable-model" class="section level3 tab">
+<h3>3 Variable Model</h3>
+<pre class="r"><code>summary(model.3)</code></pre>
+<pre><code>
+Call:
+lm(formula = mpg ~ wt + qsec + am, data = mtcars)
+
+Residuals:
+         Min           1Q       Median           3Q          Max 
+-3.481066996 -1.555525403 -0.725730867  1.411012209  4.660998270 
+
+Coefficients:
+                Estimate   Std. Error  t value     Pr(&gt;|t|)
+(Intercept)  9.617780515  6.959592985  1.38195   0.17791517
+wt          -3.916503725  0.711201635 -5.50688 0.0000069527
+qsec         1.225885972  0.288669554  4.24668   0.00021617
+am           2.935837192  1.410904515  2.08082   0.04671551
+
+Residual standard error: 2.45884649 on 28 degrees of freedom
+Multiple R-squared:  0.849663556,   Adjusted R-squared:  0.83355608 
+F-statistic: 52.7496394 on 3 and 28 DF,  p-value: 1.21044643e-11</code></pre>
+</div>
+<div id="variable-model-1" class="section level3 tab">
+<h3>5 Variable Model</h3>
+<pre class="r"><code>summary(model.5)</code></pre>
+<pre><code>
+Call:
+lm(formula = mpg ~ wt + qsec + am + disp + hp, data = mtcars)
+
+Residuals:
+        Min          1Q      Median          3Q         Max 
+-3.53986223 -1.73976158 -0.31956287  1.16760234  4.55336831 
+
+Coefficients:
+                 Estimate    Std. Error  t value Pr(&gt;|t|)
+(Intercept) 14.3619039643  9.7407948514  1.47441 0.152378
+wt          -4.0843320552  1.1940997228 -3.42043 0.002075
+qsec         1.0068968313  0.4754328665  2.11785 0.043908
+am           3.4704533964  1.4857800860  2.33578 0.027488
+disp         0.0112376493  0.0106033311  1.05982 0.298972
+hp          -0.0211705474  0.0145046917 -1.45957 0.156387
+
+Residual standard error: 2.42929086 on 26 degrees of freedom
+Multiple R-squared:  0.863737676,   Adjusted R-squared:  0.837533383 
+F-statistic: 32.9616859 on 5 and 26 DF,  p-value: 1.84371712e-10</code></pre>
+<p>From these output, it seems that although adjusted <span class="math inline">\(R^2\)</span> has increased in later model, the additional variables are not significant. we can compare these two model with an ANOVA test which compares the residual variance between these two models. We can write the hypothesis as,</p>
+<p><span class="math inline">\(H_0:\)</span> <em>Model 1</em> and <em>Model 2</em> are same vs <span class="math inline">\(H_1:\)</span> <em>Model 1</em> and <em>Model 2</em> are different</p>
+<p>where, <em>Model 1</em> and <em>Model 2</em> represents 3 variable and 5 variable model</p>
+<pre class="r"><code>anova(model.3, model.5)</code></pre>
+<pre><code>Analysis of Variance Table
+
+Model 1: mpg ~ wt + qsec + am
+Model 2: mpg ~ wt + qsec + am + disp + hp
+  Res.Df         RSS Df   Sum of Sq       F  Pr(&gt;F)
+1     28 169.2859295                               
+2     26 153.4378065  2 15.84812304 1.34273 0.27864</code></pre>
+<p>The ANOVA result can not reject the hypothesis so claim that <em>Model 1</em> and <em>Model 2</em> are same. So, it is better to select the simpler model with 3 predictor variables.</p>
+</div>
+</div>
+</div>
+<div id="step-wise-selection" class="section level1">
+<h1>Step-wise selection</h1>
+<p>When the number of increases, a exhaustive search of all possible subset is computationally intensive. This disadvantage can be overcome by using step-wise selection procedure. A step-wise variable selection procedure can be,</p>
+<dl>
+<dt><strong>Forward Selection Procedure</strong></dt>
+<dd>In this procedure …
+</dd>
+<dt><strong>Backward Elimination Procedure</strong></dt>
+<dd>Here …
+</dd>
+</dl>
+</div>
