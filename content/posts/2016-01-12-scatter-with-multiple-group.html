@@ -25,21 +25,23 @@ Call:
 lm(formula = mpg ~ disp * cyl, data = mtcars)
 
 Residuals:
-         Min           1Q       Median           3Q          Max 
--3.476639349 -1.810070736 -0.229717748  1.352296458  5.020839051 
+    Min      1Q  Median      3Q     Max 
+-3.4766 -1.8101 -0.2297  1.3523  5.0208 
 
 Coefficients:
-                  Estimate     Std. Error  t value   Pr(&gt;|t|)
-(Intercept)  40.8719553217   3.0201232876 13.53321 2.7906e-13
-disp         -0.1351418146   0.0279090137 -4.84223 5.0965e-05
-cyl6        -21.7899679029   5.3066001199 -4.10620 0.00035424
-cyl8        -18.8391564080   4.6116619648 -4.08511 0.00037433
-disp:cyl6     0.1387469331   0.0363533476  3.81662 0.00075284
-disp:cyl8     0.1155077196   0.0295484483  3.90910 0.00059232
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  40.87196    3.02012  13.533 2.79e-13 ***
+disp         -0.13514    0.02791  -4.842 5.10e-05 ***
+cyl6        -21.78997    5.30660  -4.106 0.000354 ***
+cyl8        -18.83916    4.61166  -4.085 0.000374 ***
+disp:cyl6     0.13875    0.03635   3.817 0.000753 ***
+disp:cyl8     0.11551    0.02955   3.909 0.000592 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
-Residual standard error: 2.37158072 on 26 degrees of freedom
-Multiple R-squared:  0.870134862,   Adjusted R-squared:  0.845160797 
-F-statistic: 34.8415391 on 5 and 26 DF,  p-value: 9.96841323e-11</code></pre>
+Residual standard error: 2.372 on 26 degrees of freedom
+Multiple R-squared:  0.8701,    Adjusted R-squared:  0.8452 
+F-statistic: 34.84 on 5 and 26 DF,  p-value: 9.968e-11</code></pre>
 <p>Lets create a (intercept, slope) pair for each level of <code>cyl</code> and create separate equation for them.</p>
 <pre class="r"><code>cf  &lt;- round(coef(mdl), 3)
 eq1 &lt;- c(cf[1], cf[2])

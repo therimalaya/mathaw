@@ -78,17 +78,19 @@ Call:
 lm(formula = mpg ~ disp, data = mtcars)
 
 Residuals:
-         Min           1Q       Median           3Q          Max 
--4.892200650 -2.202190927 -0.963085639  1.627154680  7.230540273 
+    Min      1Q  Median      3Q     Max 
+-4.8922 -2.2022 -0.9631  1.6272  7.2305 
 
 Coefficients:
-                  Estimate     Std. Error  t value   Pr(&gt;|t|)
-(Intercept) 29.59985475616  1.22971951531 24.07041 &lt; 2.22e-16
-disp        -0.04121511996  0.00471183331 -8.74715 9.3803e-10
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 29.599855   1.229720  24.070  &lt; 2e-16 ***
+disp        -0.041215   0.004712  -8.747 9.38e-10 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
-Residual standard error: 3.25145449 on 30 degrees of freedom
-Multiple R-squared:  0.71834334,    Adjusted R-squared:  0.708954785 
-F-statistic:   76.51266 on 1 and 30 DF,  p-value: 9.38032654e-10</code></pre>
+Residual standard error: 3.251 on 30 degrees of freedom
+Multiple R-squared:  0.7183,    Adjusted R-squared:  0.709 
+F-statistic: 76.51 on 1 and 30 DF,  p-value: 9.38e-10</code></pre>
 <p>This means, the effect of displacement on mile per gallon of the cars in the model is negative and its magnitude is 0.04. In other words, on one unit change of displacement, the car will travel 0.04 less per gallon.</p>
 </div>
 </div>
