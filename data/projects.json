@@ -1,9 +1,19 @@
 {
   "list": [
     {
-      "name":"Simrel",
-      "url":"https://simulatr.github.io/simrel",
-      "desc":"Versatile simulation tool in R."
+      "name": "Simrel",
+      "url": "https://simulatr.github.io/simrel",
+      "desc": "Versatile simulation tool in R."
+    },
+    {
+      "name": "AppSimrel",
+      "url": "https://therimalaya.shinyapps.io/AppSimulatr/",
+      "desc": "Shiny application for versatile simulation in R based on `simrel` package."
+    },
+    {
+      "name": "Towards SDG",
+      "url": "https://therimalaya.github.io/Towards-SDG/",
+      "desc": "Web application for collecting data from researchers and educators on their contribution to SDG goals, targets and their interations."
     }
   ]
 }

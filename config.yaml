@@ -1,7 +1,9 @@
 baseURL: /
 languageCode: en-us
 title: Mathatistics
-theme: cactus-extra
+theme: 
+  - cactus-extra
+  - grid-gallery
 copyright: Mathatistics
 disqusShortname: therimalaya
 pygmentsUseClasses: true
@@ -18,15 +20,21 @@ menu:
     - name: Home
       url: /
       weight: 1
-    - name: Writings
-      url: /posts
+    - name: Blog
+      url: /blog
       weight: 2
-    - name: Tags
-      url: /tags
+    - name: Writings
+      url: /writings
       weight: 3
-    - name: About
-      url: /about
+    - name: Photography
+      url: /photography
       weight: 4
+    - name: About me
+      url: /about
+      weight: 5
+    # - name: Tags
+    #   url: /tags
+    #   weight: 6
 markup:
   goldmark:
     renderer:
@@ -34,7 +42,7 @@ markup:
   tableOfContents:
     endLevel: 4
     ordered: no
-    startLevel: 2
+    startLevel: 1
 params:
   logo: "mathatistics.svg"
   highlightjsVersion: "9.12.0"
@@ -48,20 +56,32 @@ params:
   dateFormat: 'Jan 2, 2006'
   description: |
     Mathatistics includes tips, tutorials, techniques and some articles 
-    related to Statistics, Data Science, Programming, LaTeX and Web Development.
+    related to Epidemilogy, Survival Analysis, Multivariate Analysis, Statistics, 
+    Data Science, Programming, LaTeX and Web Development.
   googleAnalyticsAsync: yes
-  mainSection: posts
-  postsOnHomePage: 5
+  mainSection: writings
+  postsOnHomePage: 3
   projectsUrl: https://github.com/mathatistics
   rss: yes
+  toc: yes
   show_updated: no
   showAllPostsOnHomePage: no
-  showProjectsList: no
+  showProjectsList: yes
   social:
+    - link: raju.rimal@medisin.uio.no
+      name: email
+    - link: https://mathatistics.com/index.xml
+      name: rss
+    - link: https://mathatistics.com
+      name: homepage
+    - link: https://scholar.google.com/citations?user=UWO8g74AAAAJ
+      name: scholar
+    - link: https://orcid.org/0000-0001-6097-0285
+      name: orcid
+    - link: https://twitter.com/mathatistics
+      name: twitter
     - link: https://github.com/therimalaya
       name: github
     - link: https://no.linkedin.com/in/therimalaya
       name: linkedin
-    - link: raju.rimal@medisin.uio.no
-      name: email
-  tagsOverview: yes
+  tagsOverview: no

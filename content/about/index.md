@@ -1,27 +1,30 @@
 ---
-title: About me
+title: Hi! I'm Raju,
 date: 2016-08-24 17:51:42
 slug: about
+layout: about
+portrait: "../therimalaya-cropped.jpg"
+address:
+  email: raju.rimal@medisin.uio.no
+  homepage: https://mathatistics.com
+  twitter: mathatistics
+  linkedin: therimalaya
+  contact: |
+    Sognsvannsveien 9<br>
+    Domus Medica<br>
+    0372 Oslo
+social:
+  - link: https://facebook.com/therimalaya
+    name: facebook
+    label: FaceBook
+  - link: https://instagram.com/therimalaya
+    name: instagram
+    label: Instagram
+  - link: https://no.linkedin.com/in/therimalaya
+    name: linkedin
+    label: LinkedIn
 ---
 
-# Hi! I'm Raju,
+As a postdoctoral fellow, I am currently working on _trend in melanoma tumour thickness and prognostic factors in Norway_ at Biostatistics Department of University of Oslo. Communicating complex scientific problems and their solutions in a easy to understand language through visualization and illustration has alwyas been my passion. Thus, my research interest lies in the intersection of statistics, data visualization, web and programming.
 
-<div class="row">
-<div class="col-8">
-
-I am a Research Fellow at Norwegian University of Life Sciences (NMBU), Ås, Norway. I am passionate about the analysis and visualizations of data and information. My research and work interest lies in the intersection of statistics, web and programming.
-
-I am from Nepal and currently I am living in Norway with my wife and a kid. I am working on my PhD thesis. It is about the comparative analysis of multivariate methods in statistics. We are using simulated and real data to compare these methods. The data are simulated using a tool called [`simrel`](http://simulatr.github.io/simrel). This is an R package and is in process to get released.
-
-</div>
-<div class="col-4">
-<div class="LI-profile-badge"  data-version="v1" data-size="medium" data-locale="en_US" data-type="vertical" data-theme="dark" data-vanity="therimalaya">
-  <a class="LI-simple-link" href='https://no.linkedin.com/in/therimalaya?trk=profile-badge'>
-    <img src="./images/LinkedIn.png" alt="MathatisticS" />
-  </a>
-</div>
-</div>
-</div>
-
-<script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
-
+I live in Drammen, a beautiful city in Norway, with my wife and a son. I spend my personal time mostly cycling, hiking and taking pictures. I also like listing music and sometimes, when I have time, binge watching movies and serial.

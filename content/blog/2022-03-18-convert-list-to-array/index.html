@@ -1,0 +1,61 @@
+---
+title  : Convert list of array/matrix into an array in R
+slug   : convert-list-of-array-matrix-into-an-array-in-r
+author : therimalaya
+date   : 2022-03-18
+categories:
+  - R
+tags:
+  - rstat
+  - programming
+---
+
+
+
+<p>Array and matrix/tables are data structures in R with same data types such as numeric, string or boolean. This examples show how to convert a list of vector/matrix/array into a multi-dimentional array so that it will become easier to aggregate them in particular dimension. We can also do this converting everything into data frame but this way can be useful sometimes and is worth learning.</p>
+<p>Let us use a dataset already available in R and convert that into a list of tables or matrix. Here I will use <code>Titanic</code> dataset and convert it into a nested list of array using <code>purrr</code> package.</p>
+<pre class="r"><code>library(purrr)
+titanic_list &lt;- array_tree(Titanic, 4:3)
+str(titanic_list)</code></pre>
+<pre><code>List of 2
+ $ No :List of 2
+  ..$ Child: num [1:4, 1:2] 0 0 35 0 0 0 17 0
+  .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+  .. .. ..$ Class: chr [1:4] &quot;1st&quot; &quot;2nd&quot; &quot;3rd&quot; &quot;Crew&quot;
+  .. .. ..$ Sex  : chr [1:2] &quot;Male&quot; &quot;Female&quot;
+  ..$ Adult: num [1:4, 1:2] 118 154 387 670 4 13 89 3
+  .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+  .. .. ..$ Class: chr [1:4] &quot;1st&quot; &quot;2nd&quot; &quot;3rd&quot; &quot;Crew&quot;
+  .. .. ..$ Sex  : chr [1:2] &quot;Male&quot; &quot;Female&quot;
+ $ Yes:List of 2
+  ..$ Child: num [1:4, 1:2] 5 11 13 0 1 13 14 0
+  .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+  .. .. ..$ Class: chr [1:4] &quot;1st&quot; &quot;2nd&quot; &quot;3rd&quot; &quot;Crew&quot;
+  .. .. ..$ Sex  : chr [1:2] &quot;Male&quot; &quot;Female&quot;
+  ..$ Adult: num [1:4, 1:2] 57 14 75 192 140 80 76 20
+  .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+  .. .. ..$ Class: chr [1:4] &quot;1st&quot; &quot;2nd&quot; &quot;3rd&quot; &quot;Crew&quot;
+  .. .. ..$ Sex  : chr [1:2] &quot;Male&quot; &quot;Female&quot;</code></pre>
+<p>Following function will convert this nested array into a multi-dimensional array.</p>
+<pre class="r"><code>list2array &lt;- function(list, dnames.name = NULL) {
+  l2a &lt;- function(l) {
+    do.call(abind::abind, append(l, list(rev.along = 0)))
+  }
+  while (is.list(list[[1]])) {
+    list &lt;- map(list, l2a)
+  }
+  out &lt;- l2a(list)
+  if (!is.null(dnames.name)) names(dimnames(out)) &lt;- dnames.name
+  return(out)
+}</code></pre>
+<p>Now, testing the function we just created.</p>
+<pre class="r"><code>NewTitanic &lt;- list2array(titanic_list, dnames.name = names(dimnames(Titanic)))
+str(NewTitanic)</code></pre>
+<pre><code> num [1:4, 1:2, 1:2, 1:2] 0 0 35 0 0 0 17 0 118 154 ...
+ - attr(*, &quot;dimnames&quot;)=List of 4
+  ..$ Class   : chr [1:4] &quot;1st&quot; &quot;2nd&quot; &quot;3rd&quot; &quot;Crew&quot;
+  ..$ Sex     : chr [1:2] &quot;Male&quot; &quot;Female&quot;
+  ..$ Age     : chr [1:2] &quot;Child&quot; &quot;Adult&quot;
+  ..$ Survived: chr [1:2] &quot;No&quot; &quot;Yes&quot;</code></pre>
+<pre class="r"><code>identical(Titanic, as.table(NewTitanic))</code></pre>
+<pre><code>[1] TRUE</code></pre>

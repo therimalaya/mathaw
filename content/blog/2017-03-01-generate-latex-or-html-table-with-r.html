@@ -1,0 +1,741 @@
+---
+title: Create LaTeX, HTML and Markdown tables in R
+slug: latex-html-tables-in-R
+author: Raju Rimal
+date: 2017-03-01
+tags:
+  - LaTeX
+  - R
+  - Markdown
+---
+
+
+
+<p>R can do data analysis and it can create beautiful reports. You can build all these documents directly in R using <code>rmarkdown</code> which is powered by powerful <code>pandoc</code>. In lots of occasions, user just wants to get some output format of tables that we can use in other platform such as Microsoft word, LaTeX, HTML or Markdown. Here I will discuss about some packages that helps us doing so including <code>xtable</code>, <code>pander</code>, <code>knitr</code>, <code>stargazer</code> and <code>tables</code>. I will use a sample dataset and a summary output from a linear model fit and convert them into various format. Although each of them need their own elaborate discussion, I will just use very basics of them since one can always go and dig into the help file for any details.</p>
+<div id="creating-tables" class="section level2 tabset">
+<h2>Creating Tables</h2>
+<div id="xtable" class="section level3 tab">
+<h3>xtable</h3>
+<pre class="r"><code>xtable::print.xtable(
+  xtable::xtable(mtcars), type = &#39;html&#39;
+)</code></pre>
+<!-- html table generated in R 4.1.3 by xtable 1.8-4 package -->
+<!-- Fri May 13 22:46:11 2022 -->
+<table border="1">
+<tr>
+<th>
+</th>
+<th>
+mpg
+</th>
+<th>
+cyl
+</th>
+<th>
+disp
+</th>
+<th>
+hp
+</th>
+<th>
+drat
+</th>
+<th>
+wt
+</th>
+<th>
+qsec
+</th>
+<th>
+vs
+</th>
+<th>
+am
+</th>
+<th>
+gear
+</th>
+<th>
+carb
+</th>
+</tr>
+<tr>
+<td align="right">
+Mazda RX4
+</td>
+<td align="right">
+21.00
+</td>
+<td align="right">
+6.00
+</td>
+<td align="right">
+160.00
+</td>
+<td align="right">
+110.00
+</td>
+<td align="right">
+3.90
+</td>
+<td align="right">
+2.62
+</td>
+<td align="right">
+16.46
+</td>
+<td align="right">
+0.00
+</td>
+<td align="right">
+1.00
+</td>
+<td align="right">
+4.00
+</td>
+<td align="right">
+4.00
+</td>
+</tr>
+<tr>
+<td align="right">
+Mazda RX4 Wag
+</td>
+<td align="right">
+21.00
+</td>
+<td align="right">
+6.00
+</td>
+<td align="right">
+160.00
+</td>
+<td align="right">
+110.00
+</td>
+<td align="right">
+3.90
+</td>
+<td align="right">
+2.88
+</td>
+<td align="right">
+17.02
+</td>
+<td align="right">
+0.00
+</td>
+<td align="right">
+1.00
+</td>
+<td align="right">
+4.00
+</td>
+<td align="right">
+4.00
+</td>
+</tr>
+<tr>
+<td align="right">
+Datsun 710
+</td>
+<td align="right">
+22.80
+</td>
+<td align="right">
+4.00
+</td>
+<td align="right">
+108.00
+</td>
+<td align="right">
+93.00
+</td>
+<td align="right">
+3.85
+</td>
+<td align="right">
+2.32
+</td>
+<td align="right">
+18.61
+</td>
+<td align="right">
+1.00
+</td>
+<td align="right">
+1.00
+</td>
+<td align="right">
+4.00
+</td>
+<td align="right">
+1.00
+</td>
+</tr>
+<tr>
+<td align="right">
+Hornet 4 Drive
+</td>
+<td align="right">
+21.40
+</td>
+<td align="right">
+6.00
+</td>
+<td align="right">
+258.00
+</td>
+<td align="right">
+110.00
+</td>
+<td align="right">
+3.08
+</td>
+<td align="right">
+3.21
+</td>
+<td align="right">
+19.44
+</td>
+<td align="right">
+1.00
+</td>
+<td align="right">
+0.00
+</td>
+<td align="right">
+3.00
+</td>
+<td align="right">
+1.00
+</td>
+</tr>
+<tr>
+<td align="right">
+Hornet Sportabout
+</td>
+<td align="right">
+18.70
+</td>
+<td align="right">
+8.00
+</td>
+<td align="right">
+360.00
+</td>
+<td align="right">
+175.00
+</td>
+<td align="right">
+3.15
+</td>
+<td align="right">
+3.44
+</td>
+<td align="right">
+17.02
+</td>
+<td align="right">
+0.00
+</td>
+<td align="right">
+0.00
+</td>
+<td align="right">
+3.00
+</td>
+<td align="right">
+2.00
+</td>
+</tr>
+</table>
+</div>
+<div id="pander" class="section level3 tab">
+<h3>pander</h3>
+<pre class="r"><code>pander::pander(mtcars)</code></pre>
+<table style="width:100%;">
+<caption>Table continues below</caption>
+<colgroup>
+<col width="30%" />
+<col width="8%" />
+<col width="7%" />
+<col width="8%" />
+<col width="7%" />
+<col width="8%" />
+<col width="10%" />
+<col width="10%" />
+<col width="6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">mpg</th>
+<th align="center">cyl</th>
+<th align="center">disp</th>
+<th align="center">hp</th>
+<th align="center">drat</th>
+<th align="center">wt</th>
+<th align="center">qsec</th>
+<th align="center">vs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Mazda RX4</strong></td>
+<td align="center">21</td>
+<td align="center">6</td>
+<td align="center">160</td>
+<td align="center">110</td>
+<td align="center">3.9</td>
+<td align="center">2.62</td>
+<td align="center">16.46</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Mazda RX4 Wag</strong></td>
+<td align="center">21</td>
+<td align="center">6</td>
+<td align="center">160</td>
+<td align="center">110</td>
+<td align="center">3.9</td>
+<td align="center">2.875</td>
+<td align="center">17.02</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Datsun 710</strong></td>
+<td align="center">22.8</td>
+<td align="center">4</td>
+<td align="center">108</td>
+<td align="center">93</td>
+<td align="center">3.85</td>
+<td align="center">2.32</td>
+<td align="center">18.61</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Hornet 4 Drive</strong></td>
+<td align="center">21.4</td>
+<td align="center">6</td>
+<td align="center">258</td>
+<td align="center">110</td>
+<td align="center">3.08</td>
+<td align="center">3.215</td>
+<td align="center">19.44</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Hornet Sportabout</strong></td>
+<td align="center">18.7</td>
+<td align="center">8</td>
+<td align="center">360</td>
+<td align="center">175</td>
+<td align="center">3.15</td>
+<td align="center">3.44</td>
+<td align="center">17.02</td>
+<td align="center">0</td>
+</tr>
+</tbody>
+</table>
+<table style="width:60%;">
+<colgroup>
+<col width="33%" />
+<col width="6%" />
+<col width="9%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">am</th>
+<th align="center">gear</th>
+<th align="center">carb</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Mazda RX4</strong></td>
+<td align="center">1</td>
+<td align="center">4</td>
+<td align="center">4</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Mazda RX4 Wag</strong></td>
+<td align="center">1</td>
+<td align="center">4</td>
+<td align="center">4</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Datsun 710</strong></td>
+<td align="center">1</td>
+<td align="center">4</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Hornet 4 Drive</strong></td>
+<td align="center">0</td>
+<td align="center">3</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Hornet Sportabout</strong></td>
+<td align="center">0</td>
+<td align="center">3</td>
+<td align="center">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="knitr" class="section level3 tab">
+<h3>knitr</h3>
+<pre class="r"><code>knitr::kable(mtcars)</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="26%" />
+<col width="7%" />
+<col width="5%" />
+<col width="7%" />
+<col width="5%" />
+<col width="7%" />
+<col width="8%" />
+<col width="8%" />
+<col width="4%" />
+<col width="4%" />
+<col width="7%" />
+<col width="7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">mpg</th>
+<th align="right">cyl</th>
+<th align="right">disp</th>
+<th align="right">hp</th>
+<th align="right">drat</th>
+<th align="right">wt</th>
+<th align="right">qsec</th>
+<th align="right">vs</th>
+<th align="right">am</th>
+<th align="right">gear</th>
+<th align="right">carb</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Mazda RX4</td>
+<td align="right">21.0</td>
+<td align="right">6</td>
+<td align="right">160</td>
+<td align="right">110</td>
+<td align="right">3.90</td>
+<td align="right">2.620</td>
+<td align="right">16.46</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">Mazda RX4 Wag</td>
+<td align="right">21.0</td>
+<td align="right">6</td>
+<td align="right">160</td>
+<td align="right">110</td>
+<td align="right">3.90</td>
+<td align="right">2.875</td>
+<td align="right">17.02</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">Datsun 710</td>
+<td align="right">22.8</td>
+<td align="right">4</td>
+<td align="right">108</td>
+<td align="right">93</td>
+<td align="right">3.85</td>
+<td align="right">2.320</td>
+<td align="right">18.61</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">Hornet 4 Drive</td>
+<td align="right">21.4</td>
+<td align="right">6</td>
+<td align="right">258</td>
+<td align="right">110</td>
+<td align="right">3.08</td>
+<td align="right">3.215</td>
+<td align="right">19.44</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Hornet Sportabout</td>
+<td align="right">18.7</td>
+<td align="right">8</td>
+<td align="right">360</td>
+<td align="right">175</td>
+<td align="right">3.15</td>
+<td align="right">3.440</td>
+<td align="right">17.02</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tables" class="section level3 tab">
+<h3>tables</h3>
+<pre class="r"><code>tables::as.tabular(mtcars)</code></pre>
+<table class="Rtable">
+<thead>
+<tr class="center">
+<th>
+</th>
+<th>
+mpg
+</th>
+<th>
+cyl
+</th>
+<th>
+disp
+</th>
+<th>
+hp
+</th>
+<th>
+drat
+</th>
+<th>
+wt
+</th>
+<th>
+qsec
+</th>
+<th>
+vs
+</th>
+<th>
+am
+</th>
+<th>
+gear
+</th>
+<th>
+carb
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="center">
+<th class="left">
+Mazda RX4
+</th>
+<td>
+21.0
+</td>
+<td>
+6
+</td>
+<td>
+160
+</td>
+<td>
+110
+</td>
+<td>
+3.90
+</td>
+<td>
+2.620
+</td>
+<td>
+16.46
+</td>
+<td>
+0
+</td>
+<td>
+1
+</td>
+<td>
+4
+</td>
+<td>
+4
+</td>
+</tr>
+<tr class="center">
+<th class="left">
+Mazda RX4 Wag
+</th>
+<td>
+21.0
+</td>
+<td>
+6
+</td>
+<td>
+160
+</td>
+<td>
+110
+</td>
+<td>
+3.90
+</td>
+<td>
+2.875
+</td>
+<td>
+17.02
+</td>
+<td>
+0
+</td>
+<td>
+1
+</td>
+<td>
+4
+</td>
+<td>
+4
+</td>
+</tr>
+<tr class="center">
+<th class="left">
+Datsun 710
+</th>
+<td>
+22.8
+</td>
+<td>
+4
+</td>
+<td>
+108
+</td>
+<td>
+93
+</td>
+<td>
+3.85
+</td>
+<td>
+2.320
+</td>
+<td>
+18.61
+</td>
+<td>
+1
+</td>
+<td>
+1
+</td>
+<td>
+4
+</td>
+<td>
+1
+</td>
+</tr>
+<tr class="center">
+<th class="left">
+Hornet 4 Drive
+</th>
+<td>
+21.4
+</td>
+<td>
+6
+</td>
+<td>
+258
+</td>
+<td>
+110
+</td>
+<td>
+3.08
+</td>
+<td>
+3.215
+</td>
+<td>
+19.44
+</td>
+<td>
+1
+</td>
+<td>
+0
+</td>
+<td>
+3
+</td>
+<td>
+1
+</td>
+</tr>
+<tr class="center">
+<th class="left">
+Hornet Sportabout
+</th>
+<td>
+18.7
+</td>
+<td>
+8
+</td>
+<td>
+360
+</td>
+<td>
+175
+</td>
+<td>
+3.15
+</td>
+<td>
+3.440
+</td>
+<td>
+17.02
+</td>
+<td>
+0
+</td>
+<td>
+0
+</td>
+<td>
+3
+</td>
+<td>
+2
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="exercise" class="section level2">
+<h2>Exercise</h2>
+<ol style="list-style-type: decimal">
+<li>Use the <code>mtcars</code> dataset, fit a linear model with <code>mpg</code> as response variable and <code>wt</code>,<code>hp</code> and <code>disp</code> as predictor variable. Generate a LaTeX table and HTML table for the fitted model using xtable.</li>
+</ol>
+</div>

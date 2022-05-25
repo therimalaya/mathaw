@@ -1,0 +1,120 @@
+---
+title: Scatter plot with multiple group
+slug: scatter-plot-multple-group
+author: Raju Rimal
+date: 2016-01-12
+tags:
+  - Statistics
+  - Regression
+  - R
+  - Visualization
+---
+
+
+
+<p>In many situations, it becomes essential to have a plot with multiple categories. For example, colour the scatter plot according to gender and have two different regression line for each of them.</p>
+<p>Lets scatter the some points using data from <code>mtcars</code>, available default in R. Continuing the discussing from this post, where we had plotted mile per gallon (<code>mpg</code>) vs displacement (<code>disp</code>). Here we will create a separate regression line and colour the points accordingly based on number of cylinder (<code>cyl</code>) in the cars. In this article also, I will use there plotting system – base graphics, lattice plot and ggplot2.</p>
+<p>First, lets fit our linear model with number of cylinder as a categorical variable.</p>
+<pre class="r"><code>mtcars &lt;- within(mtcars, cyl &lt;- as.factor(cyl))
+mdl    &lt;- lm(mpg ~ disp * cyl, data = mtcars)
+sumry  &lt;- summary(mdl)
+sumry</code></pre>
+<pre><code>
+Call:
+lm(formula = mpg ~ disp * cyl, data = mtcars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.4766 -1.8101 -0.2297  1.3523  5.0208 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  40.87196    3.02012  13.533 2.79e-13 ***
+disp         -0.13514    0.02791  -4.842 5.10e-05 ***
+cyl6        -21.78997    5.30660  -4.106 0.000354 ***
+cyl8        -18.83916    4.61166  -4.085 0.000374 ***
+disp:cyl6     0.13875    0.03635   3.817 0.000753 ***
+disp:cyl8     0.11551    0.02955   3.909 0.000592 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 2.372 on 26 degrees of freedom
+Multiple R-squared:  0.8701,    Adjusted R-squared:  0.8452 
+F-statistic: 34.84 on 5 and 26 DF,  p-value: 9.968e-11</code></pre>
+<p>Lets create a (intercept, slope) pair for each level of <code>cyl</code> and create separate equation for them.</p>
+<pre class="r"><code>cf  &lt;- round(coef(mdl), 3)
+eq1 &lt;- c(cf[1], cf[2])
+eq2 &lt;- c(cf[1] + cf[3], cf[2] + cf[5])
+eq3 &lt;- c(cf[1] + cf[4], cf[2] + cf[6])
+eq.fn &lt;- function(eq) {
+  paste0(&quot;mpg = &quot;, eq[1],
+         ifelse(eq[2] &lt; 0, &quot; - &quot;, &quot; + &quot;),
+         abs(eq[2]), &quot; disp&quot;)
+}
+eqn &lt;- sapply(list(eq1, eq2, eq3), eq.fn)
+rsq.info &lt;- c(paste0(&quot;R^2: &quot;, round(sumry[[&quot;r.squared&quot;]], 2)),
+              paste0(&quot;adj. R^2: &quot;, round(sumry[[&quot;adj.r.squared&quot;]], 2)))</code></pre>
+<div id="plots" class="section level2 tabset">
+<h2>Plots</h2>
+<div id="base-graphics" class="section level3 tab">
+<h3>Base Graphics</h3>
+<pre class="r"><code>with(mtcars, {
+  car::scatterplot(disp, mpg, groups = cyl, smooth = F,
+                   xlab = &quot;Displacement&quot;,
+                   ylab = &quot;Mile per Gallon&quot;,
+                   main = &quot;Mile per gallon vs displacement&quot;)
+})
+op &lt;- par(family = &quot;monospace&quot;)
+legend(&quot;topright&quot;, text.col = 1:3, col = 1:3, box.lty = 0,
+       lty = 1, lwd = 1, legend = eqn)
+legend(&quot;bottomleft&quot;, legend = rsq.info)</code></pre>
+<p><img src="/blog/2016-01-12-scatter-with-multiple-group_files/figure-html/base-plot-1.svg" width="100%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(op)</code></pre>
+</div>
+<div id="lattice-plot" class="section level3 tab">
+<h3>Lattice Plot</h3>
+<pre class="r"><code>library(lattice)
+lm.panel &lt;- function(x, y, ...) {
+  panel.xyplot(x, y, ...)
+  panel.abline(eq1, col = 1, lwd = 2, lty = 2)
+  panel.abline(eq2, col = 2, lwd = 2, lty = 2)
+  panel.abline(eq3, col = 3, lwd = 2, lty = 2)
+  panel.text(max(x), max(y), pos = 2,
+             fontfamily = &quot;monospace&quot;,
+             label = paste(eqn, collapse = &quot;\n&quot;))
+  panel.text(min(x), min(y), pos = 4,
+             fontfamily = &quot;monospace&quot;,
+             label = paste(rsq.info, collapse = &quot;\n&quot;))
+}
+xyplot(mpg ~ disp, data = mtcars, groups = cyl,
+       auto.key = list(columns = 3, cex = 0.8,
+                       title = &quot;Cylinder&quot;),
+       col = 1:3, xlab = &quot;Displacement&quot;,
+       ylab = &quot;Mile per gallon&quot;,
+       panel = lm.panel)</code></pre>
+<p><img src="/blog/2016-01-12-scatter-with-multiple-group_files/figure-html/lattice-graphics-1.svg" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ggplot2" class="section level3 tab">
+<h3>ggplot2</h3>
+<pre class="r"><code>library(ggplot2)
+## Equation table for displaying them on the plot
+eqn.df &lt;- with(mtcars, {
+  data.frame(
+    cyl  = sort(unique(cyl)),
+    mpg  = max(mpg) - c(1:3),
+    disp = max(disp), eqn = eqn
+  )
+})
+ggplot(mtcars, aes(disp, mpg, color = cyl)) +
+  geom_point() +
+  theme_bw(base_size = 14) +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE) +
+  geom_text(data = eqn.df, aes(label = eqn),
+            hjust = 1, family = &quot;mono&quot;) +
+  annotate(geom = &quot;text&quot;,
+           x = min(mtcars$disp), y = min(mtcars$mpg),
+           family = &quot;mono&quot;, hjust = 0,
+           label = paste0(rsq.info, collapse = &quot;\n&quot;))</code></pre>
+<p><img src="/blog/2016-01-12-scatter-with-multiple-group_files/figure-html/ggplot-1.svg" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+</div>

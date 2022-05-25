@@ -1,0 +1,95 @@
+---
+title: Basic Scatter Plot and linear fitted line
+slug: basic-scatter-plot-with-reg-line
+author: therimalaya
+date: 2017-03-01
+tags:
+  - R
+  - Statistics
+  - Regression
+  - Visualization
+---
+
+
+
+<p>Lets scatter into some points created by data in xy-space. Data are scattered everywhere but what relation is there between some specific variable with other. Cutting down to simple talking and stick to the heading, we can use <a href="https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/mtcars.html"><code>mtcars</code></a> dataset in R.</p>
+<p>The dataset from Motor Trend US magazine, 1974 comprises fuel consumption and 10 various aspects of automobile design and their performance for 32 automobiles of different models. I will try to obtain the scatter plot for the model and the fitted line for the model.</p>
+<p>In R, there are three popular packages for obtaining plots <em>Base Graphics</em>, <em>Lattice Plot</em> and <em>ggplot2</em>. Here we will create a scatter plot between two variables <code>mpg</code> (mile per gallon) and <code>disp</code>(displacement) along with the fitted regession line with equation and <span class="math inline">\(R²\)</span> value in it using all there graphics packages.</p>
+<p>Lets first fit a linear model,</p>
+<pre class="r"><code>mdl &lt;- lm(mpg ~ disp, data = mtcars)
+sumry &lt;- summary(mdl)
+cf &lt;- round(coef(mdl), 2)
+
+eqn &lt;- paste(terms(mdl)[[2]],
+             paste0(cf[1], ifelse(cf[2] &lt; 0, &quot; &quot;, &quot; + &quot;),
+                    cf[2], &quot; &quot;, terms(mdl)[[3]]), sep = &quot; = &quot;)
+sumry.lbl &lt;- paste0(&quot;R^2: &quot;, round(sumry$r.squared, 2),
+                    &quot;, adj R^2: &quot;, round(sumry$adj.r.squared, 2))</code></pre>
+<div id="plots" class="section level2 tabset">
+<h2>Plots</h2>
+<div id="base-graphics" class="section level3 tab">
+<h3>Base Graphics</h3>
+<pre class="r"><code>with(mtcars, {
+  plot(disp, mpg, pch = 22, bg = &quot;gray&quot;,
+       xlab = &quot;Displacement&quot;, ylab = &quot;Mile per Gallon&quot;,
+       main = &quot;Displacement vs Mile per Gallon&quot;)
+  abline(mdl, col = &quot;red&quot;, lty = 2, lwd = 2)
+  text(max(disp), max(mpg), adj = c(1, 1), family = &quot;monospace&quot;,
+       label = paste(eqn, sumry.lbl, sep = &quot;\n&quot;))
+})</code></pre>
+<p><img src="/blog/2017-03-01-basic-scatter-plot-and-linear-fitted-line_files/figure-html/unnamed-chunk-3-1.svg" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="lattice-plot" class="section level3 tab">
+<h3>Lattice Plot</h3>
+<pre class="r"><code>library(lattice)
+lm.panel &lt;- function(x, y, ...) {
+  panel.xyplot(x, y, pch = 22, fill = &quot;gray&quot;,
+               cex = 1.2, col = &quot;black&quot;)
+  panel.text(max(x), max(y), pos = 2,
+             fontfamily = &quot;monospace&quot;,
+             label = paste(eqn, sumry.lbl, sep = &quot;\n&quot;))
+  panel.abline(mdl, col = &quot;red&quot;, lty = 2, lwd = 2)
+}
+xyplot(mpg ~ disp, data = mtcars,
+       panel = lm.panel,
+       main = &quot;Displacement vs Mile per Gallon&quot;,
+       xlab = &quot;Displacement&quot;, ylab = &quot;Mile per Gallon&quot;)</code></pre>
+<p><img src="/blog/2017-03-01-basic-scatter-plot-and-linear-fitted-line_files/figure-html/unnamed-chunk-4-1.svg" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ggplot" class="section level3 tab">
+<h3>ggplot</h3>
+<pre class="r"><code>library(ggplot2)
+plt &lt;- qplot(disp, mpg, data = mtcars, geom = c(&quot;point&quot;),
+             xlab = &quot;Displacement&quot;,
+             ylab = &quot;Mile per Gallon&quot;,
+             main = &quot;Displacement vs Mile per Gallon&quot;,
+             size = I(3), shape = I(22), fill = I(&quot;grey&quot;))
+plt + theme_bw() +
+  geom_smooth(method = &quot;lm&quot;, color = &quot;red&quot;, linetype = 2) +
+  annotate(x = Inf, y = Inf, geom = &quot;text&quot;,
+           hjust = 1.2, vjust = 1.2,
+           family = &quot;monospace&quot;,
+           label = paste(eqn, sumry.lbl, sep = &quot;\n&quot;))</code></pre>
+<p><img src="/blog/2017-03-01-basic-scatter-plot-and-linear-fitted-line_files/figure-html/unnamed-chunk-5-1.svg" width="100%" style="display: block; margin: auto;" /></p>
+<p>The fitted regression summary is,</p>
+<pre><code>
+Call:
+lm(formula = mpg ~ disp, data = mtcars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.8922 -2.2022 -0.9631  1.6272  7.2305 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 29.599855   1.229720  24.070  &lt; 2e-16 ***
+disp        -0.041215   0.004712  -8.747 9.38e-10 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 3.251 on 30 degrees of freedom
+Multiple R-squared:  0.7183,    Adjusted R-squared:  0.709 
+F-statistic: 76.51 on 1 and 30 DF,  p-value: 9.38e-10</code></pre>
+<p>This means, the effect of displacement on mile per gallon of the cars in the model is negative and its magnitude is 0.04. In other words, on one unit change of displacement, the car will travel 0.04 less per gallon.</p>
+</div>
+</div>
