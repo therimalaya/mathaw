@@ -10,18 +10,21 @@ echo "Deleting old publication"
 rm -rf public
 
 echo "Generating site"
-hugo
+Rscript -e "blogdown::build_site()"
 
-echo "Updating master branch"
+echo "Get Setup"
+git config --global init.defaultBranch main
+git config --global push.default matching
+git config --global user.email "therimalaya@gmail.com"
+git config --global user.name "therimalaya"
+
+echo "Updating main branch"
 cd public
 git init
-
-git config --global push.default matching
-git config --global user.email "${GitHubEMail}"
-git config --global user.name "${GitHubUser}"
+git remote add origin git@github.com:therimalaya/therimalaya.github.io.git
 
 git add --all .
-git commit -m "Publishing to master (deploy.sh)"
+git commit -m "Publishing to main (deploy.sh)"
 
 echo "Pushing to github"
-git push --quiet --force https://${GitHubKEY}@github.com/${GitHubUser}/${GitHubRepo}.git master
+git push --quiet --force git@github.com:therimalaya/therimalaya.github.io.git main
