@@ -23,9 +23,9 @@ menu:
     - name: Blog
       url: /blog
       weight: 2
-    - name: Writings
-      url: /writings
-      weight: 3
+    # - name: Writings
+    #   url: /writings
+    #   weight: 3
     - name: Photography
       url: /photography
       weight: 4

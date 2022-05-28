@@ -1,0 +1,61 @@
+<link rel="stylesheet" href='{{ "css/style.css" | absURL }}'>
+<div class="container">
+    <div class="row">
+        {{ if .Site.Data.gallery }}
+        {{ $img := index .Site.Data.gallery ($.Get 0) }}
+        {{ $num_img := (len $img)}}
+        {{ $img_per_set := 12}}
+        {{ if gt $num_img 0 }}
+        {{ $cor_size := (div $num_img $img_per_set) | math.Ceil | int | default 1 }}
+        <div id="carouselExampleIndicators" class="carousel carousel-dark slide">
+            <div class="carousel-inner">
+                {{ range $i := (seq 0 (sub $cor_size 1)) }}
+                <div class="carousel-item {{ if (eq $i 0) }} active {{ end }}">
+                    {{ $img_idx := (seq 0 $num_img) }}
+                    {{ $start := (mul $i $img_per_set) }}
+                    {{ $end := (add $start $img_per_set) }}
+                    <div id="gallery" class="container">
+                        <div class="row row-cols-4">
+                            {{ range $j := (seq $start (sub $end 1)) }}
+                            {{ $dir := path.Join "img" ($.Get 0) }}
+                            {{ $this := index $img $j }}
+                            {{ $thumb := path.Join $dir "thumb" (printf "%s.jpg" $this.fname) | absURL }}
+                            {{ $path := path.Join $dir (printf "%s.jpg" $this.fname) | absURL }}
+                            <div class="col p-1 border card">
+                                <a href='{{ $path }}' data-toggle="lightbox" data-gallery="{{ $.Get 0 }}"
+                                    data-type="image" class="col-sm-12">
+                                    <img src="{{ $thumb }}" class="card-img-top img rouned float-start img-fluid"
+                                        type="button" />
+                                </a>
+                            </div>
+                            {{ end }}
+                        </div>
+                    </div>
+                </div>
+                {{ end }}
+            </div>
+            <div class="carousel-btn">
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <div class="carousel-indicators">
+                    {{ range $i := (seq 0 (sub $cor_size 1)) }}
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ $i }}"
+                        class="{{ if (eq $i 0) }} active {{ end }}" aria-current="{{ if (eq $i 0) }} true {{ end }}"
+                        aria-label="Slide {{ $i }}"></button>
+                    {{ end }}
+                </div>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        {{ end }}
+        {{ end }}
+    </div>
+</div>
+<script src="/js/lightbox.js" defer></script>

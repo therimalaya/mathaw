@@ -2,4 +2,4 @@
 title: My Photography
 ---
 
-{{< gallery instagram >}}
+{{< carousel-gallery instagram >}}
