@@ -264,7 +264,7 @@ assessment.plt &lt;- ggplot(bs.est, aes(nvar, value, color = estimates)) +
             size = 3, hjust = 0, vjust = c(1, -1, -1),
             color = &quot;black&quot;, family = &quot;monospace&quot;)</code></pre>
 </details>
-<p><img src="/blog/2017-03-05-model-assessment-and-variable-selection-prodecure_files/figure-html/assessment.plot-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/assessment.plot-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>From these plots, we see that with 5 variables we will obtain maximum adjusted coefficient of determination (<span class="math inline">\(R^2\)</span>). Similarly, both BIC and Mallow CP will be minimum for models with only 3 predictor variables. With the help of table above, we can identify these variables. From the table, row corresponding to 3 variables, we see that the three predictors are <code>wt</code>, <code>qsec</code> and <code>am</code>. To obtain maximum adjusted <span class="math inline">\(R^2\)</span>, <code>disp</code> and <code>hp</code> should be added to the previous 3 predictors.</p>
 <p>This way, we can reduce a model to few variables optimising different assessment criteria. Let look at the fit of these reduced models:</p>
 <pre class="r"><code>model.3 &lt;- lm(mpg ~ wt + qsec + am, data = mtcars)

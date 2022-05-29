@@ -68,7 +68,7 @@ op &lt;- par(family = &quot;monospace&quot;)
 legend(&quot;topright&quot;, text.col = 1:3, col = 1:3, box.lty = 0,
        lty = 1, lwd = 1, legend = eqn)
 legend(&quot;bottomleft&quot;, legend = rsq.info)</code></pre>
-<p><img src="/blog/2016-01-12-scatter-with-multiple-group_files/figure-html/base-plot-1.svg" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/base-plot-1.svg" width="100%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>par(op)</code></pre>
 </div>
 <div id="lattice-plot" class="section level3 tab">
@@ -92,7 +92,7 @@ xyplot(mpg ~ disp, data = mtcars, groups = cyl,
        col = 1:3, xlab = &quot;Displacement&quot;,
        ylab = &quot;Mile per gallon&quot;,
        panel = lm.panel)</code></pre>
-<p><img src="/blog/2016-01-12-scatter-with-multiple-group_files/figure-html/lattice-graphics-1.svg" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/lattice-graphics-1.svg" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="ggplot2" class="section level3 tab">
 <h3>ggplot2</h3>
@@ -115,6 +115,6 @@ ggplot(mtcars, aes(disp, mpg, color = cyl)) +
            x = min(mtcars$disp), y = min(mtcars$mpg),
            family = &quot;mono&quot;, hjust = 0,
            label = paste0(rsq.info, collapse = &quot;\n&quot;))</code></pre>
-<p><img src="/blog/2016-01-12-scatter-with-multiple-group_files/figure-html/ggplot-1.svg" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/ggplot-1.svg" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 </div>

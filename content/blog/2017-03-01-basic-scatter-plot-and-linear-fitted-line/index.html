@@ -37,7 +37,7 @@ sumry.lbl &lt;- paste0(&quot;R^2: &quot;, round(sumry$r.squared, 2),
   text(max(disp), max(mpg), adj = c(1, 1), family = &quot;monospace&quot;,
        label = paste(eqn, sumry.lbl, sep = &quot;\n&quot;))
 })</code></pre>
-<p><img src="/blog/2017-03-01-basic-scatter-plot-and-linear-fitted-line_files/figure-html/unnamed-chunk-3-1.svg" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.svg" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="lattice-plot" class="section level3 tab">
 <h3>Lattice Plot</h3>
@@ -54,7 +54,7 @@ xyplot(mpg ~ disp, data = mtcars,
        panel = lm.panel,
        main = &quot;Displacement vs Mile per Gallon&quot;,
        xlab = &quot;Displacement&quot;, ylab = &quot;Mile per Gallon&quot;)</code></pre>
-<p><img src="/blog/2017-03-01-basic-scatter-plot-and-linear-fitted-line_files/figure-html/unnamed-chunk-4-1.svg" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-1.svg" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="ggplot" class="section level3 tab">
 <h3>ggplot</h3>
@@ -70,7 +70,7 @@ plt + theme_bw() +
            hjust = 1.2, vjust = 1.2,
            family = &quot;monospace&quot;,
            label = paste(eqn, sumry.lbl, sep = &quot;\n&quot;))</code></pre>
-<p><img src="/blog/2017-03-01-basic-scatter-plot-and-linear-fitted-line_files/figure-html/unnamed-chunk-5-1.svg" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.svg" width="100%" style="display: block; margin: auto;" /></p>
 <p>The fitted regression summary is,</p>
 <pre><code>
 Call:

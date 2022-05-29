@@ -8,7 +8,6 @@ tags:
   - ANOVA
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <p>Often we Analysis of Variance (ANOVA) to analyze the variances to find if different cases results in similar outcome and if the difference is significant. Following are some simple examples,</p>
@@ -23,13 +22,14 @@ tags:
 <p>here, <span class="math inline">\(\tau_i\)</span> is the effect corresponding to group <span class="math inline">\(i\)</span> and <span class="math inline">\(\varepsilon_{ij} \sim \mathrm{N}(0, \sigma^2)\)</span>, the usual assumption of linear model. Simulation example below describe it in details.</p>
 <div id="simulation-and-real-data-example" class="section level2 accordions">
 <h2>Simulation and Real Data Example</h2>
-<div id="simulation-high-variance" class="section level3 accordion tabset">
-<h3>Simulation (high variance)</h3>
+<div id="simulation" class="section level3 accordion">
+<h3>Simulation</h3>
 <p>Consider following three cases the variance of each group is quiet high. These three groups have different average values. Let us simulate only 100 observations,</p>
 <pre class="r"><code>cases &lt;- tibble(
   group = paste(&quot;Group&quot;, 1:3),
   mean = c(0.5, 1, 0.2),
-  sd = rep(2, 3)
+  sd = rep(1, 3)
+  # sd = c(0.2, 0.8, 0.3)
 ) %&gt;% 
   group_by(group) %&gt;% 
   mutate(observation = purrr::map2(mean, sd, function(mean, sd) {
@@ -39,69 +39,16 @@ tags:
 # Groups:   group [3]
   group    mean    sd observation
   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;     
-1 Group 1   0.5     2 &lt;dbl [100]&gt;
-2 Group 2   1       2 &lt;dbl [100]&gt;
-3 Group 3   0.2     2 &lt;dbl [100]&gt;</code></pre>
-<div id="plot" class="section level4 tab">
-<h4>Plot</h4>
-<p><img src="/posts/2021-03-29-how-anova-analyze-variance_files/figure-html/unnamed-chunk-5-1.svg" width="100%" /></p>
-</div>
-<div id="anova" class="section level4 tab">
-<h4>ANOVA</h4>
-<pre><code>
-Call:
-lm(formula = observation ~ group, data = tidyr::unnest(cases, 
-    cols = &quot;observation&quot;))
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--5.4872 -1.4945 -0.2822  1.4844  6.7577 
-
-Coefficients:
-             Estimate Std. Error t value Pr(&gt;|t|)  
-(Intercept)    0.4228     0.2180   1.940   0.0534 .
-groupGroup 2   0.4559     0.3083   1.479   0.1402  
-groupGroup 3  -0.5646     0.3083  -1.832   0.0680 .
----
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-
-Residual standard error: 2.18 on 297 degrees of freedom
-Multiple R-squared:  0.03572,   Adjusted R-squared:  0.02922 
-F-statistic:   5.5 on 2 and 297 DF,  p-value: 0.004512</code></pre>
-</div>
-<div id="effects" class="section level4 tab">
-<h4>Effects</h4>
-<p><img src="/posts/2021-03-29-how-anova-analyze-variance_files/figure-html/unnamed-chunk-7-1.svg" width="100%" /></p>
-</div>
-<div id="post-hoc" class="section level4 tab">
-<h4>Post-hoc</h4>
-<p><img src="/posts/2021-03-29-how-anova-analyze-variance_files/figure-html/unnamed-chunk-8-1.svg" width="100%" /></p>
-</div>
-</div>
-<div id="simulation-low-variance" class="section level3 accordion tabset">
-<h3>Simulation (Low variance)</h3>
-<p>This time lets us consider another three cases where the variance of each group is quiet low. These three groups have different average values. Let us simulate only 100 observations,</p>
-<pre class="r"><code>cases &lt;- tibble(
-  group = paste(&quot;Group&quot;, 1:3),
-  mean = c(0.5, 1, 0.2),
-  sd = rep(0.05, 3)
-) %&gt;% 
-  group_by(group) %&gt;% 
-  mutate(observation = purrr::map2(mean, sd, function(mean, sd) {
-    rnorm(nsim, mean, sd) + rnorm(nsim, 0, 1)
-  }))</code></pre>
-<pre><code># A tibble: 3 × 4
-# Groups:   group [3]
-  group    mean    sd observation
-  &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;     
-1 Group 1   0.5  0.05 &lt;dbl [100]&gt;
-2 Group 2   1    0.05 &lt;dbl [100]&gt;
-3 Group 3   0.2  0.05 &lt;dbl [100]&gt;</code></pre>
-<div id="plot-1" class="section level5 tab">
+1 Group 1   0.5     1 &lt;dbl [100]&gt;
+2 Group 2   1       1 &lt;dbl [100]&gt;
+3 Group 3   0.2     1 &lt;dbl [100]&gt;</code></pre>
+<div id="analysis" class="section level4 tabset">
+<h4>Analysis</h4>
+<div id="plot" class="section level5 tab">
 <h5>Plot</h5>
-<p><img src="/posts/2021-03-29-how-anova-analyze-variance_files/figure-html/unnamed-chunk-12-1.svg" width="100%" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.svg" width="100%" /></p>
 </div>
-<div id="anova-1" class="section level5 tab">
+<div id="anova" class="section level5 tab">
 <h5>ANOVA</h5>
 <pre><code>
 Call:
@@ -109,28 +56,29 @@ lm(formula = observation ~ group, data = tidyr::unnest(cases,
     cols = &quot;observation&quot;))
 
 Residuals:
-     Min       1Q   Median       3Q      Max 
--2.65575 -0.65260 -0.00795  0.64087  2.63294 
+    Min      1Q  Median      3Q     Max 
+-3.7353 -0.9074 -0.0727  1.0054  4.4233 
 
 Coefficients:
-             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)    0.3784     0.1012   3.741 0.000220 ***
-groupGroup 2   0.5196     0.1430   3.632 0.000331 ***
-groupGroup 3  -0.3492     0.1430  -2.441 0.015221 *  
+             Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)    0.4132     0.1378   2.997  0.00295 **
+groupGroup 2   0.5012     0.1949   2.571  0.01064 * 
+groupGroup 3  -0.3965     0.1949  -2.034  0.04286 * 
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
-Residual standard error: 1.012 on 297 degrees of freedom
-Multiple R-squared:  0.1117,    Adjusted R-squared:  0.1057 
-F-statistic: 18.68 on 2 and 297 DF,  p-value: 2.287e-08</code></pre>
+Residual standard error: 1.378 on 297 degrees of freedom
+Multiple R-squared:  0.06691,   Adjusted R-squared:  0.06063 
+F-statistic: 10.65 on 2 and 297 DF,  p-value: 3.415e-05</code></pre>
 </div>
-<div id="effects-1" class="section level5 tab">
+<div id="effects" class="section level5 tab">
 <h5>Effects</h5>
-<p><img src="/posts/2021-03-29-how-anova-analyze-variance_files/figure-html/unnamed-chunk-14-1.svg" width="100%" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.svg" width="100%" /></p>
 </div>
-<div id="post-hoc-1" class="section level5 tab">
+<div id="post-hoc" class="section level5 tab">
 <h5>Post-hoc</h5>
-<p><img src="/posts/2021-03-29-how-anova-analyze-variance_files/figure-html/unnamed-chunk-15-1.svg" width="100%" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-8-1.svg" width="100%" /></p>
+</div>
 </div>
 </div>
 <div id="real-data" class="section level3 accordion">
@@ -151,13 +99,13 @@ F-statistic: 18.68 on 2 and 297 DF,  p-value: 2.287e-08</code></pre>
  9          4.4         2.9          1.4         0.2 setosa 
 10          4.9         3.1          1.5         0.1 setosa 
 # … with 140 more rows</code></pre>
-<div id="analysis" class="section level4 tabset">
+<div id="analysis-1" class="section level4 tabset">
 <h4>Analysis</h4>
-<div id="plot-2" class="section level5 tab">
+<div id="plot-1" class="section level5 tab">
 <h5>Plot</h5>
-<p><img src="/posts/2021-03-29-how-anova-analyze-variance_files/figure-html/unnamed-chunk-18-1.svg" width="100%" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-11-1.svg" width="100%" /></p>
 </div>
-<div id="anova-2" class="section level5 tab">
+<div id="anova-1" class="section level5 tab">
 <h5>ANOVA</h5>
 <pre><code>
 Call:
@@ -179,13 +127,13 @@ Residual standard error: 0.5148 on 147 degrees of freedom
 Multiple R-squared:  0.6187,    Adjusted R-squared:  0.6135 
 F-statistic: 119.3 on 2 and 147 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
-<div id="effects-2" class="section level5 tab">
+<div id="effects-1" class="section level5 tab">
 <h5>Effects</h5>
-<p><img src="/posts/2021-03-29-how-anova-analyze-variance_files/figure-html/unnamed-chunk-20-1.svg" width="100%" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-13-1.svg" width="100%" /></p>
 </div>
-<div id="post-hoc-2" class="section level5 tab">
+<div id="post-hoc-1" class="section level5 tab">
 <h5>Post-hoc</h5>
-<p><img src="/posts/2021-03-29-how-anova-analyze-variance_files/figure-html/unnamed-chunk-21-1.svg" width="100%" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-14-1.svg" width="100%" /></p>
 </div>
 </div>
 </div>
