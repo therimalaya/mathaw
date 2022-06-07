@@ -1,0 +1,116 @@
+name: Raju Rimal
+photo: therimalaya-cropped.jpg
+address: |
+    Amtmand Breders Gate 3,
+    3045, Drammen
+    Norway
+contact:
+    phone: +47 99884369
+    email:
+        - rimalraju@hotmail.com
+        - raju.rimal@medisin.uio.no
+    website:
+        - https://mathatistics.com
+social:
+    - facebook:
+          name: therimalaya
+          url: "https://facebook.com/therimalaya"
+    - twitter:
+          name: mathatistics
+          url: ""
+    - linkedin:
+          name: therimalaya
+          url: ""
+certificate:
+    - Driving licence class B
+experiences:
+    research:
+        - institution: University of Oslo
+          faculty: Faculty of Medicine
+          department: Department of Biostatistics
+          address: Oslo, Norway
+          position: Postdoctoral Fellow
+          from: Nov 2020
+          to: Now
+          extra: |
+              Analyzing the trend of melanoma incidence and 
+              survival by tumour thickness in Norway overall 
+              and within different prognostic factors such as 
+              sex, age, anatomic site, and melanoma subtypes.
+        - institution: Norwegian University of Life Sciences
+          faculty: ""
+          department: "Faculty of Chem., Biotech. and Food Science"
+          address: Ås, Norway
+          position: Ph.D. Candidate
+          from: Aug. 2015
+          to: Oct. 2019
+          extra: |
+              Developing a versatile tool for simulating 
+              multi-response data from a linear model.
+    consultation:
+        - institution: Norwegian University of Life Sciences
+          faculty: ""
+          department: "Cenral Adminstration"
+          address: Ås, Norway
+          position: Senior Consultant
+          from: Nov. 2019
+          to: May. 2020
+          extra: |
+              Mapping the research works of NMBU to the SDG goals of 
+              UN is the primary objective of this project. 
+              Creating web-application from scratch and analysing & 
+              visualizing the collected data has been an exciting 
+              experience.
+        - institution: Norwegian University of Life Sciences
+          faculty: ""
+          department: "Learning Center"
+          address: Ås, Norway
+          position: Consultant
+          from: Nov. 2016
+          to: Mar. 2018
+          extra: |
+              Providing statistical advice and tips about 
+              data analysis and preparation to the bachelors, 
+              masters and other PhD students was both exciting 
+              and challenging job where I encountered problems 
+              from many disciplines such as animal sciences, 
+              plant sciences and econometrics.
+    teaching:
+        institution1:
+            name: Norwegian University of Life Sciences
+            address: Ås, Norway
+            extra: ""
+            courses:
+                - name: Theoretical Statistics II
+                  period: Spring 2020
+                  extra: |
+                      Planning and perparation of the complete course,
+                      prepare exercises, assignments and examination.
+                - name: Applied Methods in Statistics
+                  period: Autumn 2018
+                  extra: |
+                      Involved in lecturing the part of the course including
+                      classification and descrimination.
+                - name: Design of Experiment and Analysis of Variance
+                  period: August 2017
+                  extra: |
+                      Involved in lecturing the part of the course including
+                      classification and descrimination.
+    teaching-assistant:
+        - institutions:
+              - inst1:
+                    - name: Norwegian University of Life Sciences
+                    - address: Ås, Norway
+                    - extra: |
+                          Working closely with students and preparing exercises for the course 
+                          helped me not only to understand and solve students’ problems but also 
+                          gave me ideas on how to construct lectures, exercises and other activities 
+                          for future courses. The experience has also helped me to clearly 
+                          understand many basic statistical concepts.
+                    - courses:
+                          - name: Applied Methods in Statistics
+                            period: Autumn of 2016, 2017, and 2018
+                          - name: Regression Analysis
+                            period: January of 2014, 2016, and 2017
+                          - name: Design of Experiment and Analysis of Variance
+                            period: August of 2013, 2015, 2016, and 2017

@@ -1,9 +1,10 @@
 baseURL: /
 languageCode: en-us
 title: Mathatistics
-theme: 
+theme:
   - cactus-extra
   - grid-gallery
+  - moderncv
 copyright: Mathatistics
 disqusShortname: therimalaya
 pygmentsUseClasses: true
@@ -53,7 +54,7 @@ params:
   comments:
     enabled: no
     engine: disqus
-  dateFormat: 'Jan 2, 2006'
+  dateFormat: "Jan 2, 2006"
   description: |
     Mathatistics includes tips, tutorials, techniques and some articles 
     related to Epidemilogy, Survival Analysis, Multivariate Analysis, Statistics, 

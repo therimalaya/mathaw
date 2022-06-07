@@ -7,3 +7,6 @@
 [submodule "cactus-extra"]
 	path = themes/cactus-extra
 	url = git@github.com:ExtraSpace/cactus-extra-hugo-theme.git
+[submodule "themes/moderncv"]
+	path = themes/moderncv
+	url = git@github.com:ExtraSpace/hugo-moderncv.git
