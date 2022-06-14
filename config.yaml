@@ -33,9 +33,12 @@ menu:
     - name: About me
       url: /about
       weight: 5
+    - name: Resume
+      url: /cv
+      weight: 6
     # - name: Tags
     #   url: /tags
-    #   weight: 6
+    #   weight: 7
 markup:
   goldmark:
     renderer:
