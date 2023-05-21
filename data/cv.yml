@@ -1,9 +1,9 @@
 name: Raju Rimal
 photo: therimalaya-cropped.jpg
-address: |
-  Amtmand Breders Gate 3,
-  3045, Drammen
-  Norway
+# address: |
+#   Amtmand Breders Gate 3,
+#   3045, Drammen
+#   Norway
 contact:
   phone: +47 99884369
   email:
@@ -228,9 +228,9 @@ skills:
       - Data visualization
       - Web development and deployment
     competency:
-      advanced: R, Python, LaTeX, Knitr, Rmarkdown, Web Technologies, Microsoft Office, Graphics Design
-      comfortable: Git, JavaScript, Minitab, Matlab, Stata, SPSS, Docker, SQL, Bash, Linux, D3
-      elementary: Julia, SVG
+      advanced: R, Python, LaTeX, Knitr, Rmarkdown, Web Technologies, Microsoft Office, Stata
+      comfortable: Git, JavaScript, Minitab, Matlab, Docker, SQL, Bash, Linux, D3, Graphics Design
+      elementary: Julia, SPSS, SVG
   scientific:
     highlight:
       - Model building and experimental design
@@ -245,6 +245,7 @@ skills:
       - Friendly and helpful nature
 hobbies: |
   I like hiking, cycling, and photography. In my free time I also play lego and make crafts together with my son.
+  I like programming and like to explore new programming language
 languages:
   - Nepali:
       Reading: Native

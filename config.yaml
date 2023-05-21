@@ -21,12 +21,12 @@ menu:
     - name: Home
       url: /
       weight: 1
-    - name: Blog
+    - name: Writings
       url: /blog
       weight: 2
-    # - name: Writings
-    #   url: /writings
-    #   weight: 3
+    - name: Blog
+      url: "http://mathaw.cloudrimalaya.com"
+      weight: 3
     - name: Photography
       url: /photography
       weight: 4

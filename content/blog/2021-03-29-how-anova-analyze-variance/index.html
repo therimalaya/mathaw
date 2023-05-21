@@ -10,131 +10,54 @@ tags:
 
 
 
-<p>Often we Analysis of Variance (ANOVA) to analyze the variances to find if different cases results in similar outcome and if the difference is significant. Following are some simple examples,</p>
+<p>Often we Analysis of Variance (ANOVA) to analyze the variances to find if
+different cases results in similar outcome and if the difference is significant.
+Following are some simple examples,</p>
 <ul>
 <li>The effect of different diets on growth of fishes</li>
 <li>Comparing the height of three different species of a plant</li>
 <li>Type of flour used for baking a bread</li>
 </ul>
-<p>These are some common examples where in some cases data are collected by setting up an experiment and in other cases they are collected through sampling. This article tries to explain how the ANOVA analyze the variance and in what situation are they significant throught both simulated and real data.</p>
+<p>These are some common examples where in some cases data are collected by setting
+up an experiment and in other cases they are collected through sampling.
+This article tries to explain how the ANOVA analyze the variance and in what
+situation are they significant throught both simulated and real data.</p>
 <p>Consider the following model with <span class="math inline">\(i=3\)</span> groups and <span class="math inline">\(j=n\)</span> observations,</p>
-<p><span class="math display">\[y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \; i = 1, 2, 3 \texttt{ and } j = 1, 2, \ldots n\]</span></p>
-<p>here, <span class="math inline">\(\tau_i\)</span> is the effect corresponding to group <span class="math inline">\(i\)</span> and <span class="math inline">\(\varepsilon_{ij} \sim \mathrm{N}(0, \sigma^2)\)</span>, the usual assumption of linear model. Simulation example below describe it in details.</p>
-<div id="simulation-and-real-data-example" class="section level2 accordions">
-<h2>Simulation and Real Data Example</h2>
-<div id="simulation" class="section level3 accordion">
-<h3>Simulation</h3>
-<p>Consider following three cases the variance of each group is quiet high. These three groups have different average values. Let us simulate only 100 observations,</p>
-<pre class="r"><code>cases &lt;- tibble(
-  group = paste(&quot;Group&quot;, 1:3),
-  mean = c(0.5, 1, 0.2),
-  sd = rep(1, 3)
-  # sd = c(0.2, 0.8, 0.3)
-) %&gt;% 
-  group_by(group) %&gt;% 
-  mutate(observation = purrr::map2(mean, sd, function(mean, sd) {
-    rnorm(nsim, mean, sd) + rnorm(nsim, 0, 1)
-  }))</code></pre>
-<pre><code># A tibble: 3 × 4
-# Groups:   group [3]
-  group    mean    sd observation
-  &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;     
-1 Group 1   0.5     1 &lt;dbl [100]&gt;
-2 Group 2   1       1 &lt;dbl [100]&gt;
-3 Group 3   0.2     1 &lt;dbl [100]&gt;</code></pre>
-<div id="analysis" class="section level4 tabset">
-<h4>Analysis</h4>
-<div id="plot" class="section level5 tab">
-<h5>Plot</h5>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.svg" width="100%" /></p>
+<p><span class="math display">\[y_{ij} = \mu + \tau_i + \varepsilon_{ij}, \; i = 1, 2, 3
+\texttt{ and } j = 1, 2, \ldots n\]</span></p>
+<p>here, <span class="math inline">\(\tau_i\)</span> is the effect corresponding to group <span class="math inline">\(i\)</span> and
+<span class="math inline">\(\varepsilon_{ij} \sim \mathrm{N}(0, \sigma^2)\)</span>, the usual assumption of
+linear model. In order to understand how ANOVA finds the differences between
+groups and how the group mean and their standard deviation influence the
+results from ANOVA, let us consider following four cases:</p>
+<dl>
+<dt>Case 1</dt>
+<dd>
+Similar group means with high variation within the groups
+</dd>
+<dt>Case 2</dt>
+<dd>
+Similar group means with low variation within the groups
+</dd>
+<dt>Case 3</dt>
+<dd>
+Distant group means with high variation within the groups
+</dd>
+<dt>Case 4</dt>
+<dd>
+Distant group means with low variation within the groups
+</dd>
+</dl>
+<div id="simulating-data-resembling-these-cases" class="section level2">
+<h2>Simulating data resembling these cases</h2>
 </div>
-<div id="anova" class="section level5 tab">
-<h5>ANOVA</h5>
-<pre><code>
-Call:
-lm(formula = observation ~ group, data = tidyr::unnest(cases, 
-    cols = &quot;observation&quot;))
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--3.7353 -0.9074 -0.0727  1.0054  4.4233 
-
-Coefficients:
-             Estimate Std. Error t value Pr(&gt;|t|)   
-(Intercept)    0.4132     0.1378   2.997  0.00295 **
-groupGroup 2   0.5012     0.1949   2.571  0.01064 * 
-groupGroup 3  -0.3965     0.1949  -2.034  0.04286 * 
----
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-
-Residual standard error: 1.378 on 297 degrees of freedom
-Multiple R-squared:  0.06691,   Adjusted R-squared:  0.06063 
-F-statistic: 10.65 on 2 and 297 DF,  p-value: 3.415e-05</code></pre>
+<div id="fitting-anova-model-for-each-cases" class="section level2">
+<h2>Fitting ANOVA model for each cases</h2>
 </div>
-<div id="effects" class="section level5 tab">
-<h5>Effects</h5>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.svg" width="100%" /></p>
+<div id="prepare-data-for-plotting" class="section level2">
+<h2>Prepare data for plotting</h2>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-1.svg" width="100%" /></p>
 </div>
-<div id="post-hoc" class="section level5 tab">
-<h5>Post-hoc</h5>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-8-1.svg" width="100%" /></p>
-</div>
-</div>
-</div>
-<div id="real-data" class="section level3 accordion">
-<h3>Real Data</h3>
-<p>Lets use the famous <code>iris</code> dataset and try to analyze the difference in the <code>Species</code> based on the <code>Sepal.Length</code>,</p>
-<pre class="r"><code>iris &lt;- as_tibble(iris)</code></pre>
-<pre><code># A tibble: 150 × 5
-   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
- 1          5.1         3.5          1.4         0.2 setosa 
- 2          4.9         3            1.4         0.2 setosa 
- 3          4.7         3.2          1.3         0.2 setosa 
- 4          4.6         3.1          1.5         0.2 setosa 
- 5          5           3.6          1.4         0.2 setosa 
- 6          5.4         3.9          1.7         0.4 setosa 
- 7          4.6         3.4          1.4         0.3 setosa 
- 8          5           3.4          1.5         0.2 setosa 
- 9          4.4         2.9          1.4         0.2 setosa 
-10          4.9         3.1          1.5         0.1 setosa 
-# … with 140 more rows</code></pre>
-<div id="analysis-1" class="section level4 tabset">
-<h4>Analysis</h4>
-<div id="plot-1" class="section level5 tab">
-<h5>Plot</h5>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-11-1.svg" width="100%" /></p>
-</div>
-<div id="anova-1" class="section level5 tab">
-<h5>ANOVA</h5>
-<pre><code>
-Call:
-lm(formula = Sepal.Length ~ Species, data = iris)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--1.6880 -0.3285 -0.0060  0.3120  1.3120 
-
-Coefficients:
-                  Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)         5.0060     0.0728  68.762  &lt; 2e-16 ***
-Speciesversicolor   0.9300     0.1030   9.033 8.77e-16 ***
-Speciesvirginica    1.5820     0.1030  15.366  &lt; 2e-16 ***
----
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-
-Residual standard error: 0.5148 on 147 degrees of freedom
-Multiple R-squared:  0.6187,    Adjusted R-squared:  0.6135 
-F-statistic: 119.3 on 2 and 147 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-<div id="effects-1" class="section level5 tab">
-<h5>Effects</h5>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-13-1.svg" width="100%" /></p>
-</div>
-<div id="post-hoc-1" class="section level5 tab">
-<h5>Post-hoc</h5>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-14-1.svg" width="100%" /></p>
-</div>
-</div>
-</div>
+<div id="discussion" class="section level2">
+<h2>Discussion</h2>
 </div>
