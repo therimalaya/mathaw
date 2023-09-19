@@ -100,12 +100,3 @@ details>summary {
 #writings-archive .post-list h2 {
   counter-reset: list;
 }
-
-/* Columns and other related UI tweaks */
-.content .columns {
-  display: flex;
-}
-.content .columns .column {
-  padding: 0 10px;
-  width: 100%;
-}

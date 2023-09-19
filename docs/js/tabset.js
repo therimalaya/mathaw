@@ -1,9 +1,5 @@
-/*
-const levels = Array(6).fill(1).map((x, i) => "level" + (i + 1))
-let tabsets = levels.map(x => document.querySelectorAll(`.section.${x}.tabset`))
-  .filter(x => x.length)
-*/
-function make_tabs(tabset) {
+var tabsets = document.querySelectorAll('div.section.tabset')
+tabsets.forEach(tabset => {
   tabWrapper = document.createElement("ul")
   tabWrapper.setAttribute("class", "nav nav-tabs")
   tabWrapper.setAttribute("id", "myTab")
@@ -19,6 +15,7 @@ function make_tabs(tabset) {
     const tabID = tab.id
     const tabTitle = tab.querySelector('h2, h3, h4, h5, h6')
     const tabPanel = tab.querySelectorAll("div.section.tab > :not(:first-child)")
+    
     
     var li = document.createElement("li")
     li.setAttribute("class", "nav-item")
@@ -52,16 +49,4 @@ function make_tabs(tabset) {
   })
   tabset.append(tabWrapper)
   tabset.append(tabContents)
-}
-
-const levels = Array(6).fill(1).map((x, i) => "level" + (i + 1))
-let tabsets = levels.map(x => document.querySelectorAll(`.section.${x}.tabset`))
-  .filter(x => x.length)
-
-const tabset_idx = Array(tabsets.length).fill()
-  .map((x, i) => tabsets.length - i - 1)
-
-tabset_idx.map(idx => tabsets[idx].forEach(tabset => make_tabs(tabset)))
-
-// var tabsets = document.querySelectorAll('div.section.tabset')
-// tabsets.forEach(tabset => make_tabs(tabset))
+})
