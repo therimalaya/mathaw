@@ -1,6 +1,3 @@
-[submodule "public"]
-	path = public
-	url = git@github.com:therimalaya/therimalaya.github.io.git
 [submodule "grid-gallery"]
 	path = themes/grid-gallery
 	url = git@github.com:ExtraSpace/hugo-module-grid-gallery.git
