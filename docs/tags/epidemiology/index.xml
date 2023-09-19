@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Epidemiology on Mathatistics</title>
+    <link>/tags/epidemiology/</link>
+    <description>Recent content in Epidemiology on Mathatistics</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Mathatistics</copyright>
+    <lastBuildDate>Fri, 02 Dec 2022 21:00:57 +0100</lastBuildDate><atom:link href="/tags/epidemiology/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Age Adjusted Rates in Epidemiology</title>
+      <link>/blog/2022-12-02-age-adjusted-rates-in-epidemiology/</link>
+      <pubDate>Fri, 02 Dec 2022 21:00:57 +0100</pubDate>
+      
+      <guid>/blog/2022-12-02-age-adjusted-rates-in-epidemiology/</guid>
+      <description>In general, rates means how fast something is changing usually over time. In epidemiology uses it to describe how quickly a disese occurs in a population. For example, 35 cases of melanoma cases in 100,000 person per year convey a the sense of speed of spread of disease in that population. Incidence rate and mortality rate are two examples that we will discuss further below.
+ In epidemiology, rate measures the frequency of occurance of an event in a given population over certain period of time1.</description>
+    </item>
+    
+  </channel>
+</rss>

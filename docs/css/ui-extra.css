@@ -1,0 +1,111 @@
+/* ACCORDION */
+.accordion-header {
+  margin-top: 0;
+}
+
+/* HIGHLIGHT */
+pre {
+  padding: 0;
+}
+
+.hljs {
+  padding: 10px;
+}
+
+/* DETAILS-SUMMARY */
+summary {
+  background-color: aliceblue;
+  padding: 10px;
+}
+
+summary:focus {
+  outline: none;
+}
+
+details>summary:before {
+  content: "\f152";
+  font-family: "Font Awesome 5 Free";
+}
+
+details[open]>summary:before {
+  content: "\f150";
+  font-family: "Font Awesome 5 Free";
+}
+
+details>summary> :not(:first-child) {
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+details>summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-column-gap: 10px;
+}
+
+/* About page */
+.about p {
+  text-align: unset;
+  hyphens: unset;
+}
+
+.about>.row>h1 {
+  padding-top: 35px;
+}
+
+.about .row .portrait img {
+  padding: 2px;
+  outline: 2px solid grey;
+  outline-offset: 1px;
+}
+
+.about .row div#contact-address {
+  /* outline: 2px solid grey; */
+  padding: 2px 5px;
+  margin-top: 5px;
+  font-size: 85%;
+  overflow-x: hidden;
+}
+
+.about .row div#contact-address a {
+  display: inline-grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 3px;
+  align-items: baseline;
+  text-decoration: none;
+  padding: 0;
+  background: none;
+  border-bottom: 1px solid lightslategray;
+}
+
+@media (min-width: 800px) {
+  body {
+    zoom: 115%;
+  }
+}
+
+/* List page for writings */
+#writings-archive .post-list .post-item {
+  display: inline-grid;
+  width: 100%;
+  grid-template-columns: auto 1fr auto auto;
+  grid-column-gap: 10px;
+}
+
+#writings-archive .post-list .post-item::before {
+  counter-increment: list;
+  content: counter(list) ".";
+}
+
+#writings-archive .post-list h2 {
+  counter-reset: list;
+}
+
+/* Columns and other related UI tweaks */
+.content .columns {
+  display: flex;
+}
+.content .columns .column {
+  padding: 0 10px;
+  width: 100%;
+}
